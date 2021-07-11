@@ -22,8 +22,12 @@ let g:credentials = "host=localhost;user=homestead;password=secret"
 ## Usage
 ```vim
 :call ConnectTheDB()
-:Database Name: <yourname database>
+:Database: <yourname database>
 :Query: <your statement sql>
+
+select the query
+:'<,'>DBExecuteSelection
+:Databasee: <yourname database>
 ```
 
 ## Mapping
