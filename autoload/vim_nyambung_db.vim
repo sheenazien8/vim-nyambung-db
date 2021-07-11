@@ -1,4 +1,3 @@
-" --------------------------------
 " Add our plugin to the path
 " --------------------------------
 if has("python3")
@@ -13,27 +12,7 @@ Py sys.path.append(vim.eval('expand("<sfile>:h")'))
 
 let g:database = ''
 function! ConnectTheDB()
-  let l:dir = $HOME . "/.config/nvim/modules/mysql/"
-  if g:database == ""
-    let g:database = input("Database Name: ")
-  endif
-  let l:query = input("Query: ")
-  let l:sqlfile = split(getcwd(), '/')[-1] . ".md"
-  let l:fullpath = l:dir . l:sqlfile
-  if expand("%F") == l:fullpath
-    :q
-  endif
-  if !isdirectory(expand(l:dir))
-    execute "call mkdir(expand('" . l:dir. "', 'p'))"
-  endif
-  execute "!python3 src/connect-mysql.py " . g:database . " \"" . l:query . "\" " l:fullpath . " \"" . g:credentials. "\""
-  execute "sp"
-  execute "e " l:fullpath
-  execute "normal! gg"
-  execute "normal! i"
-  execute "normal! w"
-  :w
-  let g:fullpath = l:fullpath
+
 endfunction
 
 function! vim_nyambung_db#VimNyambungDb(buff_type)
@@ -60,8 +39,11 @@ def create_window_result():
     delete_old_output_if_exists()
     vim.command('split /tmp/results.md')
     vim.command("normal! gg")
-    vim.command("normal! i")
-    vim.command("normal! w")
+    vim.command('let lines=getbufline(bufnr("/tmp/results.md"), 1, "$")')
+    for line in range(0, len(' '.join(vim.eval('lines')).split('# ')) - 1):
+      vim.command("normal! 2ji")
+      vim.command("normal! }")
+      pass
     vim.command("file results")
     vim.command('setlocal filetype=text')
     vim.command('setlocal buftype=nowrite')
@@ -69,10 +51,9 @@ def create_window_result():
 
 def execute():
     lines, starting_line_num, ending_line_num, col1, col2 = get_visual_selection()
-    command_selection = lines[0]
+    command_selection = ' '.join(lines)
     config = map_credentians(vim.eval('g:credentials'), vim.eval('g:database'))
     result_command = get_result_from_command(command_selection, config)
-    print(result_command)
     output = map_result_from_command(result_command)
     create_window_result()
 
@@ -81,10 +62,10 @@ def execute_from_shell():
     input_credentials = vim.eval('g:credentials')
     query = ' '.join(lines)
     config = map_credentians(input_credentials, vim.eval('g:database'))
-    run_from_shell(query, config)
-    create_window_result()
+    result_command = run_from_shell(query, config)
+    create_window_result(result_command)
 
-execute_from_shell()
+execute()
 EOF
 endfunction
 

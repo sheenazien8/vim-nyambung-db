@@ -14,14 +14,15 @@ class TestVimNyambungDB(unittest.TestCase):
        
     def test_get_result_from_command(self):
         input_credentials = "host=192.168.10.10;user=homestead;password=secret"
-        query = "select id,username from \n users limit 2; select id from roles; insert into groups (name) values ('sheena')"
+        query = "select id,username,email from \n users; select * from roles;"
         config = vim_nyambung_db.map_credentians(input_credentials, 'lakasir')
-        vim_nyambung_db.get_result_from_command(query, config)
+        results = vim_nyambung_db.get_result_from_command(query, config)
+        vim_nyambung_db.map_result_from_command(results)
 
 
-    def test_run_query_from_shell(self):
+    def run_query_from_shell(self):
         input_credentials = "host=192.168.10.10;user=homestead;password=secret"
-        query = "select id,username from \n users limit 2; select id from roles; insert into groups (name) values ('sheena')"
+        query = "select id,username from \n users limit 2; select id from roles; insert into groups (name) values ('sheena'); select * from roles;"
         config = vim_nyambung_db.map_credentians(input_credentials, 'lakasir')
         vim_nyambung_db.run_from_shell(query, config)
 

@@ -24,12 +24,19 @@ def get_result_from_command(queries, config):
       cnx = mysql.connector.connect(**config)
       cursor = cnx.cursor()
       wrap = []
-      for query in queries.split(';'):
-          cursor.execute(query)
-          column = cursor.column_names
-          results = [column]
-          for row in cursor:
-              results.append(row)
+      queries = queries.split(';')
+      while("" in queries) :
+          queries.remove("")
+      for query in queries:
+          if len(query) > 0:
+              query = query.replace('\n', '')
+              query = query.strip()
+              cursor.execute(query)
+              column = cursor.column_names
+              results = ['# ' + query, column]
+              for row in cursor:
+                  results.append(row)
+                  pass
               pass
           wrap.append(results)
       cnx.commit()
@@ -51,8 +58,18 @@ def get_result_from_command(queries, config):
 
 def map_result_from_command(result):
     with open(RESULTS_FILE, 'w') as writer:
-        for item in result:
-            print(item)
+        for (items) in result:
+            for item in items:
+                if isinstance(item, str):
+                    writer.write(item.strip() + '\n')
+                    pass
+                else:
+                    if len(item) > 0:
+                        writer.write('|')
+                        for record in item:
+                            writer.write(str(record) + '|')
+                        writer.write("\n")
+            writer.write("\n")
             pass
         pass
 
@@ -73,4 +90,9 @@ def run_from_shell(command, config):
         ERROR_LOG),
         shell=True
         )
-    pass
+    return read_file_lines(RESULTS_FILE)
+
+def read_file_lines(file_to_read):
+    if os.path.isfile(file_to_read):
+        with open(file_to_read, "r") as f:
+            return [l.rstrip('\n') for l in f.readlines()]
