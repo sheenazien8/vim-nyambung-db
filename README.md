@@ -32,8 +32,6 @@ select the query
 ```
 
 ## Mapping
-* `ctrl-x`: Close window query result
-* `F11`: Run call ConnectTheDB()
 
 ## Support Us
 I invest a lot of resources into creating this thing. You can support me by pressing the star button in the top right corner, or buy me a cup of coffee to brew together.
