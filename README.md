@@ -1,5 +1,6 @@
 # vim-nyambung-db.vim
 vim-nyambung-db is a plugin that helps you to connect with mysql cli without exiting vim, and stick to the jargon of working without using a mouse
+[vim-nyambung-db](doc/vim-tutorial-2021-07-12_17.35.42.gif)
 
 ## Installation
 ### Prerequisites
